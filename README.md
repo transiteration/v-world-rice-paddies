@@ -7,6 +7,7 @@
     `git clone https://github.com/transiteration/v-world-rice-paddies.git`
 
 2. Run `rice_info_api.py` (example):
+
     `python3 rice_info_api.py --auth_key your_api_key --y_min 34.633611 --x_min 126.470000  --y_max 34.729722 --x_max 126.597500`
 
 ### Result
