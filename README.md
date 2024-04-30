@@ -69,7 +69,7 @@ The sample of one future from JSON file to observe the content of the gathered i
                     34.641344934997825
                 ]
             }
-        },
+        }
     ]
 }
 ```
