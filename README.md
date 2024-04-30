@@ -12,7 +12,7 @@
 
 ### Result
 
-The sample of one future from JSON file to observe the content of the gathered information:
+The sample of one Feature from JSON file to observe the content of the gathered information:
 ```
 {
     "type": "FeatureCollection",
@@ -73,4 +73,8 @@ The sample of one future from JSON file to observe the content of the gathered i
     ]
 }
 ```
+
+#### Report
+
+Read the full [notion report](https://www.notion.so/thankscarbon/V-World-Open-API-5b36f03cef914d9b89316d4a4da3440c) here.
 
