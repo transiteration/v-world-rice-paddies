@@ -85,7 +85,7 @@ Then, run this script to draw polygons on rice paddies:
 
 ### Result
 
-![Resulted Image with Polygons](https://drive.google.com/uc?export=view&id=1oFR1UXcygZJzx3cITk9t8K7h_MJJuaPg)
+![Resulted Image with Polygons](https://drive.google.com/uc?export=view&id=1HJ8NXRdNX6835p4eEH6n7Trd3tIW5B8z)
 
 #### Report
 
