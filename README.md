@@ -6,11 +6,11 @@
     
     `git clone https://github.com/transiteration/v-world-rice-paddies.git`
 
-2. Run `get_rice.py` with authentication key and `BBOX` arguments(example):
+2. Run `get_rice.py` with authentication key issued from V-World and `BBOX` argumentsexample():
 
     `python3 get_rice.py --auth_key your_api_key --y_min 34.633611 --x_min 126.470000  --y_max 34.729722 --x_max 126.597500`
 
-### Result
+***Result***
 
 The sample of one Feature from JSON file to observe the content of the gathered information:
 ```
@@ -83,11 +83,11 @@ Then, run this script to draw polygons on rice paddies:
 
 `python3 to_mask.py --img_path path/to/image.tiff --out_path path/to/masked_image.png`
 
-### Result
+***Result***
 
 ![Resulted Image with Polygons](https://drive.google.com/uc?export=view&id=1HJ8NXRdNX6835p4eEH6n7Trd3tIW5B8z)
 
-#### Report
+### Explanation in Details in Notion Report
 
 Read the full [notion report](https://www.notion.so/thankscarbon/V-World-Open-API-5b36f03cef914d9b89316d4a4da3440c) here.
 
