@@ -77,7 +77,7 @@ The sample of one Feature from JSON file to observe the content of the gathered 
 
 ### How to Draw Polygons on Satellite Image by Using Cooridinates from JSON File
 
-First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing) to draw polygons. The area in the image corresponds to the `BBOX` provided previously when running `get_rice.py`.
+First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing). The area in the sample image corresponds to the `BBOX` provided previously when running `get_rice.py`.
 
 Then, run this script to draw polygons on rice paddies:
 
