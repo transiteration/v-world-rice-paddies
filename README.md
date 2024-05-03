@@ -1,6 +1,6 @@
 ## V-World API to get Rice Paddy Information
 
-### How to use V-World API
+### How to use V-World API to get Rice Paddy Information from Specific Area
 
 1. Clone this repository:
     
