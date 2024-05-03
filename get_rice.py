@@ -16,17 +16,12 @@ def get_rice_info(AUTH_KEY: str,
     data_dir = Path("data")
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    y_min_wgs = y_min
-    x_min_wgs = x_min
-    y_max_wgs = y_max
-    x_max_wgs = x_max
-
     features_per_request = 1000
     total_features = get_total_features(AUTH_KEY=AUTH_KEY,
-                                        y_min=y_min_wgs,
-                                        x_min=x_min_wgs,
-                                        y_max=y_max_wgs,
-                                        x_max=x_max_wgs)    
+                                        y_min=y_min,
+                                        x_min=x_min,
+                                        y_max=y_max,
+                                        x_max=x_max)    
 
     payload_template = {
         "SERVICE": "WFS",

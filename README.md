@@ -1,6 +1,6 @@
 ## V-World API to get Rice Paddy Information
 
-### How to use
+### How to use V-World API
 
 1. Clone this repository:
     
@@ -8,7 +8,7 @@
 
 2. Run `rice_info_api.py` with authentication key and `BBOX` arguments(example):
 
-    `python3 rice_info_api.py --auth_key your_api_key --y_min 34.633611 --x_min 126.470000  --y_max 34.729722 --x_max 126.597500`
+    `python3 get_rice.py --auth_key your_api_key --y_min 34.633611 --x_min 126.470000  --y_max 34.729722 --x_max 126.597500`
 
 ### Result
 
@@ -73,6 +73,19 @@ The sample of one Feature from JSON file to observe the content of the gathered 
     ]
 }
 ```
+
+
+### How to Draw polygons on Satellite Image by using cooridinates from JSON file
+
+First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing) to draw polygons. The area in the image corresponds to the `BBOX` provided previously when running `get_rice.py`.
+
+Then, run this script to draw polygons on rice paddies:
+
+`python3 to_mask.py --img_path path/to/image.tiff --out_path path/to/masked_image.png`
+
+### Result
+
+![Resulted Image with Polygons](https://drive.google.com/file/d/1o3Uj0i3p7Mrf8gWsNS2LbRN7YkYffBo9/view?usp=sharing)
 
 #### Report
 
