@@ -1,11 +1,11 @@
 import os
-import io
 import json
 import argparse
 import rasterio
-from PIL import Image
 from rasterio.plot import show
 import matplotlib.pyplot as plt
+import io
+from PIL import Image
 
 def draw_polygons(image_path: str, output_image_path: str) -> None:
     json_dir = './data/'
@@ -44,6 +44,7 @@ def draw_polygons(image_path: str, output_image_path: str) -> None:
     pil_image = pil_image.resize(original_resolution)
     pil_image.save(output_image_path)
     plt.close(fig)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
