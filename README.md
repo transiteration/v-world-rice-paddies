@@ -6,9 +6,9 @@
     
     `git clone https://github.com/transiteration/v-world-rice-paddies.git`
 
-2. Run `get_rice.py` with authentication key issued from V-World and `BBOX` argumentsexample():
+2. Run `to_get_rice.py` with authentication key issued from V-World and `BBOX` argumentsexample():
 ```
-python3 get_rice.py \
+python3 to_get_rice.py \
 --auth_key your_api_key \
 --y_min 34.633611 \
 --x_min 126.470000 \
@@ -82,7 +82,7 @@ The sample of one Feature from JSON file to observe the content of the gathered 
 
 ### How to Draw Polygons on Satellite Image by Using Cooridinates from JSON File
 
-First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing). The area in the sample image corresponds to the bounding box provided previously when running `get_rice.py`.
+First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing). The area in the sample image corresponds to the bounding box provided previously when running `to_get_rice.py`.
 
 Then, run this script to draw polygons on rice paddies:
 
