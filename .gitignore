@@ -1,5 +1,3 @@
-data/
 __pycache__/
-images/
-tiles/
-notebook.ipynb
+dataset/
+sentinel_folder

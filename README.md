@@ -7,9 +7,15 @@
     `git clone https://github.com/transiteration/v-world-rice-paddies.git`
 
 2. Run `get_rice.py` with authentication key issued from V-World and `BBOX` argumentsexample():
-
-    `python3 get_rice.py --auth_key your_api_key --y_min 34.633611 --x_min 126.470000  --y_max 34.729722 --x_max 126.597500`
-
+```
+python3 get_rice.py \
+--auth_key your_api_key \
+--y_min 34.633611 \
+--x_min 126.470000 \
+--y_max 34.729722 \
+--x_max 126.597500 \
+--json_dir path/to/save/jsons
+```
 ***Result:***
 
 The sample of one Feature from JSON file to observe the content of the gathered information:
@@ -74,18 +80,36 @@ The sample of one Feature from JSON file to observe the content of the gathered 
 }
 ```
 
-
 ### How to Draw Polygons on Satellite Image by Using Cooridinates from JSON File
 
 First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing). The area in the sample image corresponds to the `BBOX` provided previously when running `get_rice.py`.
 
 Then, run this script to draw polygons on rice paddies:
 
-`python3 to_mask.py --img_path path/to/image.tiff --out_path path/to/masked_image.png`
+`python3 to_mask.py --img_path path/to/image.tiff --out_path path/to/masked_image.png --json_dir path/to/jsons`
 
 ***Result:***
 
 ![Resulted Image with Polygons](https://drive.google.com/uc?export=view&id=1HJ8NXRdNX6835p4eEH6n7Trd3tIW5B8z)
+
+### How to Collect a Masked Dataset 
+
+1. First, download the Sentinel-2 dataset for your specific area from the Copernicus Browser. Extract the downloaded folder and place it in the `sentinel_folder` directory, or update the code to point to your custom path. Next, run `tiles.py` to apply preprocessing methods. This script will:
+
+* Convert the dataset to the WGS84 coordinate system.
+* Crop the black borders.
+* Cut the dataset into tiles.
+
+`python3 tiles.py`
+
+2. When `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`, edit the script to provide the correct SAFE folder name:
+
+`python3 response.py`
+
+3. Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files, edit the script to provide the correct SAFE folder name:
+
+`python3 masks.py`
+
 
 ### Explanation in Details in Notion Report
 
