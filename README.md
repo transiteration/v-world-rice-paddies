@@ -112,7 +112,7 @@ Run the following command:
 
 `python3 response.py`
 
-P.S edit the script to provide the correct SAFE folder name
+P.S edit the script to provide the correct SAFE folder name.
 
 Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files.
 
@@ -120,7 +120,7 @@ Run the following command:
 
 `python3 masks.py`
 
-P.S edit the script to provide the correct SAFE folder name
+P.S edit the script to provide the correct SAFE folder name.
 
 ***Example of the Dataset:***
 
