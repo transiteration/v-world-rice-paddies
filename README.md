@@ -100,15 +100,27 @@ First, download the Sentinel-2 dataset for your specific area from the [Copernic
 * Crop the black borders.
 * Cut the dataset into tiles.
 
+Run the following command:
+
 `python3 tiles.py`
 
-Secondly, when `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`, and edit the script to provide the correct SAFE folder name:
+Secondly, when `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`. 
+
+If an error occurs while requesting data from the V-World Open API, or if it takes too long to process the whole area, you can stop the script and run it later from the previously saved JSON file.
+
+Run the following command:
 
 `python3 response.py`
 
-Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files, and edit the script to provide the correct SAFE folder name:
+P.S edit the script to provide the correct SAFE folder name
+
+Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files:
+
+Run the following command:
 
 `python3 masks.py`
+
+P.S edit the script to provide the correct SAFE folder name
 
 ***Example of the Dataset:***
 
