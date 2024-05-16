@@ -82,7 +82,7 @@ The sample of one Feature from JSON file to observe the content of the gathered 
 
 ### How to Draw Polygons on Satellite Image by Using Cooridinates from JSON File
 
-First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing). The area in the sample image corresponds to the `BBOX` provided previously when running `get_rice.py`.
+First, we need to obtain the `.tiff` of the area we provided earlier. You can use [EO Browser](https://apps.sentinel-hub.com/eo-browser/) or [Copernicus Browser](https://browser.dataspace.copernicus.eu/) to get the Satellite Image. You can use this sample [image](https://drive.google.com/file/d/19QOePKGuPF2HOMnSDXN73BP0QJQSvUoJ/view?usp=sharing). The area in the sample image corresponds to the bounding box provided previously when running `get_rice.py`.
 
 Then, run this script to draw polygons on rice paddies:
 
@@ -94,7 +94,7 @@ Then, run this script to draw polygons on rice paddies:
 
 ### How to Collect a Masked Dataset 
 
-1. First, download the Sentinel-2 dataset for your specific area from the Copernicus Browser. Extract the downloaded folder and place it in the `sentinel_folder` directory, or update the code to point to your custom path. Next, run `tiles.py` to apply preprocessing methods. This script will:
+1. First, download the Sentinel-2 dataset for your specific area from the [Copernicus Browser](https://browser.dataspace.copernicus.eu/). Extract the downloaded folder and place it in the `sentinel_folder` directory, or update the code to point to your custom path. Next, run `tiles.py` to apply preprocessing methods. This script will:
 
 * Convert the dataset to the WGS84 coordinate system.
 * Crop the black borders.
