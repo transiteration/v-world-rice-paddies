@@ -94,7 +94,7 @@ Then, run this script to draw polygons on rice paddies:
 
 ### How to Collect a Masked Dataset 
 
-1. First, download the Sentinel-2 dataset for your specific area from the [Copernicus Browser](https://browser.dataspace.copernicus.eu/). Extract the downloaded folder and place it in the `sentinel_folder` directory, or update the code to point to your custom path. Next, run `tiles.py` to apply preprocessing methods. This script will:
+First, download the Sentinel-2 dataset for your specific area from the [Copernicus Browser](https://browser.dataspace.copernicus.eu/). Extract the downloaded folder and place it in the `sentinel_folder` directory, or update the code to point to your custom path. Next, run `tiles.py` to apply preprocessing methods. This script will:
 
 * Convert the dataset to the WGS84 coordinate system.
 * Crop the black borders.
@@ -102,11 +102,11 @@ Then, run this script to draw polygons on rice paddies:
 
 `python3 tiles.py`
 
-2. When `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`, and edit the script to provide the correct SAFE folder name:
+Secondly, when `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`, and edit the script to provide the correct SAFE folder name:
 
 `python3 response.py`
 
-3. Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files, and edit the script to provide the correct SAFE folder name:
+Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files, and edit the script to provide the correct SAFE folder name:
 
 `python3 masks.py`
 
