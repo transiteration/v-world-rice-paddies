@@ -106,7 +106,7 @@ Run the following command:
 
 Secondly, when `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`. 
 
-If an error occurs while requesting data from the V-World Open API, or if it takes too long to process the whole area, you can stop the script and run it later from the previously saved JSON file.
+If an error occurs while requesting data from the V-World Open API, or if it takes too long to process the whole area, you can stop the script and next time, the script will start saving JSON files from the previous place.
 
 Run the following command:
 
