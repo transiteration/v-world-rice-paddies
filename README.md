@@ -114,7 +114,7 @@ Run the following command:
 
 P.S edit the script to provide the correct SAFE folder name
 
-Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files:
+Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files.
 
 Run the following command:
 
