@@ -102,13 +102,17 @@ Then, run this script to draw polygons on rice paddies:
 
 `python3 tiles.py`
 
-2. When `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`, edit the script to provide the correct SAFE folder name:
+2. When `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`, and edit the script to provide the correct SAFE folder name:
 
 `python3 response.py`
 
-3. Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files, edit the script to provide the correct SAFE folder name:
+3. Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files, and edit the script to provide the correct SAFE folder name:
 
 `python3 masks.py`
+
+***Result:***
+
+![Example of the Dataset](https://drive.google.com/uc?export=view&id=1yidZ8NWaMX_D9kcUih_0iwvsvNj0-3wS)
 
 
 ### Explanation in Details in Notion Report

@@ -1,6 +1,6 @@
 import os 
 import json
-from get_rice import get_rice_info
+from to_get_rice import get_rice_info
 
 def load_json(filepath):
     try:
