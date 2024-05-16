@@ -110,10 +110,9 @@ Then, run this script to draw polygons on rice paddies:
 
 `python3 masks.py`
 
-***Result:***
+***Example of the Dataset:***
 
 ![Example of the Dataset](https://drive.google.com/uc?export=view&id=1yidZ8NWaMX_D9kcUih_0iwvsvNj0-3wS)
-
 
 ### Explanation in Details in Notion Report
 
