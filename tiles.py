@@ -1,5 +1,5 @@
 import os
-import cv2
+import glob
 import json
 import argparse
 import rasterio
@@ -32,21 +32,12 @@ def write_band(band, reference_path, output_path):
     out_dataset.FlushCache()
     out_dataset = None
 
-def hist_stretching(band, lower_percentile=2, upper_percentile=98, gamma=None, apply_clahe=False):
+def hist_stretching(band, lower_percentile=2, upper_percentile=98, gamma=1.0, apply_clahe=False):
     p_lower, p_upper = np.percentile(band, (lower_percentile, upper_percentile))
     band_stretched = np.clip((band - p_lower) * 255.0 / (p_upper - p_lower), 0, 255)
-
-    if gamma:
-        band_stretched = band_stretched.astype(np.uint8)
-        band_stretched = np.power(band_stretched / 255.0, gamma) * 255
-
     band_stretched = band_stretched.astype(np.uint8)
-
-    if apply_clahe:
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        band_stretched = clahe.apply(band_stretched)
-    
-    return band_stretched
+    band_stretched = np.power(band_stretched / 255.0, gamma) * 255
+    return band_stretched.astype(np.uint8)
 
 def crop_black_borders(image_path, cropped_image_path):
     with rasterio.open(image_path) as src:
@@ -87,7 +78,7 @@ def crop_black_borders(image_path, cropped_image_path):
             dst.write(cropped_image_array)
         return True
     
-def process_directories(refs_dir, tiles_dir, sentinel_dir):
+def process_directories(refs_dir, tiles_dir, sentinel_dir, gamma):
     for safe_dir in os.listdir(sentinel_dir):
         safe_path = os.path.join(sentinel_dir, safe_dir)
         if not os.path.isdir(safe_path):
@@ -104,9 +95,9 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir):
             green = read_band(green_path)
             blue = read_band(blue_path)
 
-            red_cs = hist_stretching(red)
-            green_cs = hist_stretching(green)
-            blue_cs = hist_stretching(blue)
+            red_cs = hist_stretching(red, gamma=gamma)
+            green_cs = hist_stretching(green, gamma=gamma)
+            blue_cs = hist_stretching(blue, gamma=gamma)
 
             new_red_path = os.path.join(img_data_dir, "new_red.tif")
             new_green_path = os.path.join(img_data_dir, "new_green.tif")
@@ -183,11 +174,19 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir):
                     except Exception as e:
                         print(f"Error processing {filename}: {e}")
 
+            tiles = glob.glob(os.path.join(tile_output_dir, "*.tif"))
+            tiles.sort()
+            for idx, tile in enumerate(tiles, start=1):
+                new_name = os.path.join(tile_output_dir, f"{os.path.basename(ref_path).replace('.tif', '')}_{idx}.tif")
+                os.rename(tile, new_name)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--data_path", type=str, default="./data", help="Path to create a folder with dataset")
     parser.add_argument("-s", "--sentinel_dir", type=str, default="./sentinel_folder", help="Path to directory with .SAFE folders from Copernicus Browser")
+    parser.add_argument("-g", "--gamma", type=float, default=1.0, help="Gamma value for histogram stretching")
+
     args = parser.parse_args()
 
     refs_dir = os.path.join(args.data_path, "refs/")
@@ -199,4 +198,5 @@ if __name__ == "__main__":
 
     process_directories(refs_dir=refs_dir,
                         tiles_dir=tiles_dir,
-                        sentinel_dir=args.sentinel_dir)
+                        sentinel_dir=args.sentinel_dir,
+                        gamma=args.gamma)

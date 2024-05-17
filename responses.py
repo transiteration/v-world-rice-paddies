@@ -26,7 +26,7 @@ def get_last_json_file_number(directory):
         print(f"Error: Failed to process files in directory {directory} - {e}")
         return -1
 
-def get_responses_from_safe(SAFE_NAME, AUTH_KEY):
+def get_responses_from_safe(responses_dir, json_path, AUTH_KEY):
 
     metadata = load_json(json_path)
 
@@ -59,11 +59,11 @@ def get_responses_from_safe(SAFE_NAME, AUTH_KEY):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--safe_name", type=str, required=True, help="Name of your SAFE folder with saved tiles and responses.")
-    parser.add_argument("-k", "--auth_key", type=str, default="87BD86EC-8A27-3B13-BF9B-0B39F7061EE3", help="Issued V-World Authentication Key")
+    parser.add_argument("-k", "--auth_key", type=str, required=True, help="Issued V-World Authentication Key")
     args = parser.parse_args()
 
     responses_dir = os.path.join("./data/responses", args.safe_name)
     json_path = os.path.join("./data/refs", args.safe_name + ".json")
     os.makedirs(responses_dir, exist_ok=True)
 
-    get_responses_from_safe(SAFE_NAME=args.safe_name, AUTH_KEY=args.auth_key)
+    get_responses_from_safe(responses_dir=responses_dir, json_path=json_path, AUTH_KEY=args.auth_key)
