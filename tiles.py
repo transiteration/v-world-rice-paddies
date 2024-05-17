@@ -88,7 +88,6 @@ def crop_black_borders(image_path, cropped_image_path):
         return True
     
 def process_directories(refs_dir, tiles_dir, sentinel_dir):
-    """Process Sentinel-2 directory to produce enhanced images and metadata."""
     for safe_dir in os.listdir(sentinel_dir):
         safe_path = os.path.join(sentinel_dir, safe_dir)
         if not os.path.isdir(safe_path):
@@ -145,7 +144,11 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir):
 
             os.remove(ref_path)
             os.remove(vrt_path)
+            os.remove(new_red_path)
+            os.remove(new_green_path)
+            os.remove(new_blue_path)
             os.rename(wgs_path, ref_path)
+            
             y_min, x_min, y_max, x_max = get_bbox(ref_path)
             metadata = {
                 "tif_wgs_output_path": ref_path,
