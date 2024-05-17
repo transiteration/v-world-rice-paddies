@@ -27,9 +27,7 @@ def get_last_json_file_number(directory):
         return -1
 
 def get_responses_from_safe(responses_dir, json_path, AUTH_KEY):
-
     metadata = load_json(json_path)
-
     if metadata and "bbox" in metadata:
         y_min = metadata["bbox"]["y_min"]
         x_min = metadata["bbox"]["x_min"]

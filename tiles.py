@@ -178,7 +178,6 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir, gamma):
                 new_name = os.path.join(tile_output_dir, f"{os.path.basename(ref_path).replace('.tif', '')}_{idx}.tif")
                 os.rename(tile, new_name)
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--data_path", type=str, default="./data", help="Path to create a folder with dataset")
