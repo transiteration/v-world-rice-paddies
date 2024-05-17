@@ -1,5 +1,6 @@
 import os 
 import json
+import argparse
 from to_get_rice import get_rice_info
 
 def load_json(filepath):
@@ -26,10 +27,8 @@ def get_last_json_file_number(directory):
         return -1
 
 def get_responses_from_safe(SAFE_NAME, AUTH_KEY):
-    responses_dir = os.path.join("./dataset/responses", SAFE_NAME)
-    json_path = os.path.join("./dataset/refs", SAFE_NAME + ".json")
+
     metadata = load_json(json_path)
-    os.makedirs(responses_dir, exist_ok=True)
 
     if metadata and "bbox" in metadata:
         y_min = metadata["bbox"]["y_min"]
@@ -57,8 +56,14 @@ def get_responses_from_safe(SAFE_NAME, AUTH_KEY):
     else:
         print("Error: Metadata is missing or does not contain bounding box information.")
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--safe_name", type=str, required=True, help="Name of your SAFE folder with saved tiles and responses.")
+    parser.add_argument("-k", "--auth_key", type=str, required=True, help="Issued V-World Authentication Key")
+    args = parser.parse_args()
 
-SAFE_NAME = ""
-AUTH_KEY = ""
+    responses_dir = os.path.join("./data/responses", args.safe_name)
+    json_path = os.path.join("./data/refs", args.safe_name + ".json")
+    os.makedirs(responses_dir, exist_ok=True)
 
-get_responses_from_safe(SAFE_NAME=SAFE_NAME, AUTH_KEY=AUTH_KEY)
+    get_responses_from_safe(SAFE_NAME=args.safe_name, AUTH_KEY=args.auth_key)

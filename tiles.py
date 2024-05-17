@@ -1,6 +1,7 @@
 import os
 import cv2
 import json
+import argparse
 import rasterio
 import subprocess
 import numpy as np
@@ -86,10 +87,10 @@ def crop_black_borders(image_path, cropped_image_path):
             dst.write(cropped_image_array)
         return True
     
-def process_folders(sentinel_folder, refs_dir, tiles_dir):
-    """Process Sentinel-2 folders to produce enhanced images and metadata."""
-    for safe_folder in os.listdir(sentinel_folder):
-        safe_path = os.path.join(sentinel_folder, safe_folder)
+def process_directories(refs_dir, tiles_dir, sentinel_dir):
+    """Process Sentinel-2 directory to produce enhanced images and metadata."""
+    for safe_dir in os.listdir(sentinel_dir):
+        safe_path = os.path.join(sentinel_dir, safe_dir)
         if not os.path.isdir(safe_path):
             continue
 
@@ -180,15 +181,19 @@ def process_folders(sentinel_folder, refs_dir, tiles_dir):
                         print(f"Error processing {filename}: {e}")
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--data_path", type=str, default="./data", help="Path to create a folder with dataset")
+    parser.add_argument("-s", "--sentinel_dir", type=str, default="./sentinel_folder", help="Path to directory with .SAFE folders from Copernicus Browser")
+    args = parser.parse_args()
 
-dataset_folder = "./dataset"
-refs_dir = os.path.join(dataset_folder, "refs/")
-tiles_dir = os.path.join(dataset_folder, "tiles/")
-os.makedirs(dataset_folder, exist_ok=True)
-os.makedirs(tiles_dir, exist_ok=True)
-os.makedirs(refs_dir, exist_ok=True)
+    refs_dir = os.path.join(args.data_path, "refs/")
+    tiles_dir = os.path.join(args.data_path, "tiles/")
 
-sentinel_folder = "./sentinel_folder"
-process_folders(sentinel_folder=sentinel_folder,
-                refs_dir=refs_dir,
-                tiles_dir=tiles_dir)
+    os.makedirs(args.data_path, exist_ok=True)
+    os.makedirs(tiles_dir, exist_ok=True)
+    os.makedirs(refs_dir, exist_ok=True)
+
+    process_directories(refs_dir=refs_dir,
+                        tiles_dir=tiles_dir,
+                        sentinel_dir=args.sentinel_dir)

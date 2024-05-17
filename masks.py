@@ -3,11 +3,12 @@ import io
 import json
 import shutil
 import rasterio
+import argparse
 from PIL import Image
 from rasterio.plot import show
 import matplotlib.pyplot as plt
 
-def draw_polygons(tiles_dir: str, masks_dir: str, json_dir: str, misc_dir = "./dataset/miscs") -> None:
+def draw_polygons(tiles_dir: str, masks_dir: str, json_dir: str) -> None:
     polygons_list = []
     for json_file in os.listdir(json_dir):
         if json_file.endswith(".json"):
@@ -15,12 +16,11 @@ def draw_polygons(tiles_dir: str, masks_dir: str, json_dir: str, misc_dir = "./d
                 data = json.load(f)
                 polygons_list.extend([feature["geometry"]["coordinates"][0][0] for feature in data["features"]])
     
-    os.makedirs(masks_dir, exist_ok=True)
     for image_file in os.listdir(tiles_dir):
         if image_file.endswith(".tif"):
             image_path = os.path.join(tiles_dir, image_file)
-            mask_image_path = os.path.join(masks_dir, image_file)
-            misc_image_path = os.path.join(misc_dir, image_file)
+            mask_image_path = os.path.join(masks_dir, image_file.split(".")[0] + ".png")
+            misc_image_path = os.path.join(miscs_dir, image_file)
             with rasterio.open(image_path) as src:
                 image = src.read([1, 2, 3])
                 extent = rasterio.plot.plotting_extent(src)
@@ -53,9 +53,17 @@ def draw_polygons(tiles_dir: str, masks_dir: str, json_dir: str, misc_dir = "./d
                 shutil.copy2(image_path, misc_image_path)
                 plt.close()
 
-SAFE_NAME = ""
-tiles_dir = os.path.join("./dataset/tiles", SAFE_NAME)
-masks_dir = os.path.join("./dataset/masks", SAFE_NAME)
-responses_dir = os.path.join("./dataset/responses", SAFE_NAME)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--safe_name", type=str, required=True, help="Name of your SAFE folder with saved tiles and responses.")
+    args = parser.parse_args()
 
-draw_polygons(tiles_dir=tiles_dir, masks_dir=masks_dir, json_dir=responses_dir)
+    tiles_dir = os.path.join("./dataset/tiles", args.safe_name)
+    masks_dir = os.path.join("./dataset/masks", args.safe_name)
+    miscs_dir = os.path.join("./dataset/miscs", args.safe_name)
+    responses_dir = os.path.join("./dataset/responses", args.safe_name)
+
+    os.makedirs(masks_dir, exist_ok=True)
+    os.makedirs(miscs_dir, exist_ok=True)
+
+    draw_polygons(tiles_dir=tiles_dir, masks_dir=masks_dir, json_dir=responses_dir)

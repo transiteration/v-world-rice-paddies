@@ -9,7 +9,7 @@
 2. Run `to_get_rice.py` with authentication key issued from V-World and `BBOX` argumentsexample():
 ```
 python3 to_get_rice.py \
---auth_key your_api_key \
+--auth_key YOUR_AUTH_KEY \
 --y_min 34.633611 \
 --x_min 126.470000 \
 --y_max 34.729722 \
@@ -92,9 +92,9 @@ Then, run this script to draw polygons on rice paddies:
 
 ![Resulted Image with Polygons](https://drive.google.com/uc?export=view&id=1HJ8NXRdNX6835p4eEH6n7Trd3tIW5B8z)
 
-### How to Collect a Masked Dataset 
+### How to Collect a Masked Dataset
 
-First, download the Sentinel-2 dataset for your specific area from the [Copernicus Browser](https://browser.dataspace.copernicus.eu/). Extract the downloaded folder and place it in the `sentinel_folder` directory, or update the code to point to your custom path. Next, run `tiles.py` to apply preprocessing methods. This script will:
+First, download the Sentinel-2 dataset for your specific area from the [Copernicus Browser](https://browser.dataspace.copernicus.eu/). Extract the downloaded .SAFE folder and place it in some folder. Next, run `tiles.py` to apply preprocessing methods. This script will:
 
 * Convert the dataset to the WGS84 coordinate system.
 * Crop the black borders.
@@ -102,7 +102,7 @@ First, download the Sentinel-2 dataset for your specific area from the [Copernic
 
 Run the following command:
 
-`python3 tiles.py`
+`python3 tiles.py --sentinel_folder path/to/folder/with/sentinel/datasets`
 
 Secondly, when `tiles.py` is executed, it creates a JSON file containing the bounding box for the provided dataset. Use this JSON file to get all rice paddies polygons coordinates from that area by running `response.py`. 
 
@@ -110,17 +110,13 @@ If an error occurs while requesting data from the V-World Open API, or if it tak
 
 Run the following command:
 
-`python3 response.py`
-
-P.S edit the script to provide the correct SAFE folder name.
+`python3 response.py --safe_name YOUR_SAFE_NAME --auth_key YOUR_AUTH_KEY`
 
 Finally, run `masks.py` to mask the tiles using the coordinates from the JSON files.
 
 Run the following command:
 
-`python3 masks.py`
-
-P.S edit the script to provide the correct SAFE folder name.
+`python3 masks.py --safe_name YOUR_SAFE_NAME`
 
 ***Example of the Dataset:***
 
