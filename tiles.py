@@ -57,11 +57,9 @@ def crop_black_borders(image_path, cropped_image_path):
 
         window = Window.from_slices(
             (top_left[0], bottom_right[0] + 1),
-            (top_left[1], bottom_right[1] + 1)
-        )
+            (top_left[1], bottom_right[1] + 1))
 
         cropped_image_array = src.read(window=window)
-        
         if cropped_image_array.shape[1] < 64 or cropped_image_array.shape[2] < 64:
             return False
         
