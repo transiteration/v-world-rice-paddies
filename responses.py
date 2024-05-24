@@ -35,6 +35,7 @@ def get_responses_from_safe(responses_dir, json_path, AUTH_KEY):
         x_max = metadata["bbox"]["x_max"]
 
         last_json_file_number = get_last_json_file_number(responses_dir)
+        print(last_json_file_number)
         if last_json_file_number == -1:
             get_rice_info(AUTH_KEY,
                         y_min=y_min,

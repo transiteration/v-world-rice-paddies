@@ -32,7 +32,7 @@ def write_band(band, reference_path, output_path):
     out_dataset.FlushCache()
     out_dataset = None
 
-def hist_stretching(band, lower_percentile=2, upper_percentile=98, gamma=1.0, apply_clahe=False):
+def hist_stretching(band, lower_percentile=2, upper_percentile=98, gamma=1.0):
     p_lower, p_upper = np.percentile(band, (lower_percentile, upper_percentile))
     band_stretched = np.clip((band - p_lower) * 255.0 / (p_upper - p_lower), 0, 255)
     band_stretched = band_stretched.astype(np.uint8)
@@ -85,9 +85,12 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir, gamma):
         granule_dir = os.path.join(safe_path, "GRANULE")
         for granule_folder in os.listdir(granule_dir):
             granule_path = os.path.join(granule_dir, granule_folder)
-            img_data_dir = os.path.join(granule_path, "IMG_DATA")
-            bands_paths = {f[-7:-4]: os.path.join(img_data_dir, f) for f in os.listdir(img_data_dir) if f.endswith((".jp2"))}
-            red_path, green_path, blue_path = (bands_paths[b] for b in ["B04", "B03", "B02"])
+            img_data_dir = os.path.join(granule_path, "IMG_DATA", "R10m")
+            bands_paths = {f.split('_')[-2]: os.path.join(img_data_dir, f) for f in os.listdir(img_data_dir) if f.endswith("_10m.jp2")}
+            
+            red_path = bands_paths['B04']
+            green_path = bands_paths['B03']
+            blue_path = bands_paths['B02']
 
             red = read_band(red_path)
             green = read_band(green_path)
@@ -105,7 +108,7 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir, gamma):
             write_band(green_cs, green_path, new_green_path)
             write_band(blue_cs, blue_path, new_blue_path)
 
-            ref_filename = os.path.basename(bands_paths["B04"]).replace("_B04.jp2", ".tif")
+            ref_filename = os.path.basename(bands_paths["B04"]).replace("_B04_10m.jp2", ".tif")
             ref_path = os.path.join(refs_dir, ref_filename)
             vrt_path = ref_path.replace(".tif", ".vrt")
             wgs_path = ref_path.replace(".tif", "_wgs84.tif")

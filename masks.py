@@ -1,12 +1,10 @@
 import os
-import io
 import json
 import shutil
-import rasterio
 import argparse
-from PIL import Image
+import rasterio
 from rasterio.plot import show
-import matplotlib.pyplot as plt
+from PIL import Image, ImageDraw
 
 def extract_number(filename):
     return int(os.path.splitext(filename.split('_')[-1])[0])
@@ -41,33 +39,25 @@ def draw_polygons(tiles_dir: str, masks_dir: str, miscs_dir, json_dir: str) -> N
         with rasterio.open(image_path) as src:
             image = src.read([1, 2, 3])
             extent = rasterio.plot.plotting_extent(src)
+            original_resolution = (src.profile["width"], src.profile["height"])
 
-        fig, ax = plt.subplots(figsize=(10, 10))
-        show(image, extent=extent, ax=ax)
-        ax.axis("off")
+        mask_image = Image.new("L", original_resolution, 0)
+        draw = ImageDraw.Draw(mask_image)
 
         polygons_drawn = False
         for polygon_coords in polygons_list:
             poly_x, poly_y = zip(*polygon_coords)
             if min(poly_x) >= extent[0] and max(poly_x) <= extent[1] and min(poly_y) >= extent[2] and max(poly_y) <= extent[3]:
-                ax.fill(poly_x, poly_y, color="red", alpha=0.5)
+                poly_x = [(x - extent[0]) / (extent[1] - extent[0]) * original_resolution[0] for x in poly_x]
+                poly_y = [(original_resolution[1] - (y - extent[2]) / (extent[3] - extent[2]) * original_resolution[1]) for y in poly_y]
+                polygon_coords_transformed = list(zip(poly_x, poly_y))
+                draw.polygon(polygon_coords_transformed, outline=255, fill=255)
                 polygons_drawn = True
 
         if polygons_drawn:
-            buf = io.BytesIO()
-            plt.savefig(buf, format="png", dpi=300, bbox_inches="tight", pad_inches=0)
-            buf.seek(0)
-            pil_image = Image.open(buf)
-
-            with rasterio.open(image_path) as src:
-                original_resolution = src.profile["width"], src.profile["height"]
-
-            pil_image = pil_image.resize(original_resolution)
-            pil_image.save(mask_image_path)
-            plt.close()
+            mask_image.save(mask_image_path)
         else:
             shutil.copy2(image_path, misc_image_path)
-            plt.close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -75,7 +65,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     tiles_dir = os.path.join("./data/tiles", args.safe_name)
-    masks_dir = os.path.join("./data/masks", args.safe_name)
+    masks_dir = os.path.join("./data/masks_2", args.safe_name)
     miscs_dir = os.path.join("./data/miscs", args.safe_name)
     responses_dir = os.path.join("./data/responses", args.safe_name)
 
