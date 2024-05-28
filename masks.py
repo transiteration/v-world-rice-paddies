@@ -65,7 +65,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     tiles_dir = os.path.join("./data/tiles", args.safe_name)
-    masks_dir = os.path.join("./data/masks_2", args.safe_name)
+    masks_dir = os.path.join("./data/masks", args.safe_name)
     miscs_dir = os.path.join("./data/miscs", args.safe_name)
     responses_dir = os.path.join("./data/responses", args.safe_name)
 
