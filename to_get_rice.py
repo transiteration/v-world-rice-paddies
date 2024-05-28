@@ -3,7 +3,6 @@ import json
 import argparse
 import urllib.request as req
 from urllib.parse import urlencode
-from utils import get_total_features
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def get_total_features(AUTH_KEY: str,
