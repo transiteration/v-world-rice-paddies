@@ -154,7 +154,7 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir, gamma):
             os.makedirs(tile_output_dir, exist_ok=True)
             subprocess.run([
                 "gdal_retile.py",
-                "-ps", "256", "256",
+                "-ps", "512", "512",
                 "-targetDir", tile_output_dir,
                 ref_path
             ], check=True)

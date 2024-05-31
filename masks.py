@@ -34,8 +34,7 @@ def draw_polygons(tiles_dir: str, masks_dir: str, miscs_dir, json_dir: str) -> N
     for image_file in sorted_tiles[last_processed_index:]:
         image_path = os.path.join(tiles_dir, image_file)
         mask_image_path = os.path.join(masks_dir, image_file.split(".")[0] + ".png")
-        misc_image_path = os.path.join(miscs_dir, image_file.split(".")[0] + ".png")
-
+        misc_image_path = os.path.join(miscs_dir, image_file)
         with rasterio.open(image_path) as src:
             image = src.read([1, 2, 3])
             extent = rasterio.plot.plotting_extent(src)

@@ -1,15 +1,12 @@
 import os
+import gc
 import json
 import argparse
 import urllib.request as req
 from urllib.parse import urlencode
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-def get_total_features(AUTH_KEY: str,
-                       y_min: str,
-                       x_min: str,
-                       y_max: str,
-                       x_max: str) -> int:
+def get_total_features(AUTH_KEY: str, y_min: str, x_min: str, y_max: str, x_max: str) -> int:
     url = "https://api.vworld.kr/req/wfs"
 
     payload = {
@@ -55,25 +52,14 @@ def save_filtered_data(data, filtered_features, start_index, json_dir):
         file_path = os.path.join(json_dir, f"response_{start_index // 1000}.json") 
         with open(file_path, "w") as json_file:
             json.dump(filtered_data, json_file, indent=4, ensure_ascii=False)
-            json_file.write("\n")
         print(f"Filtered response saved successfully as {file_path}")
     else:
         print("No filtered features found. Skipping saving the JSON file.")
 
-def get_rice_info(AUTH_KEY: str,
-                  y_min: str,
-                  x_min: str,
-                  y_max: str,
-                  x_max: str,
-                  json_dir: str,
-                  start_index=0) -> None:
+def get_rice_info(AUTH_KEY: str, y_min: str, x_min: str, y_max: str, x_max: str, json_dir: str, start_index=0) -> None:
     url = "https://api.vworld.kr/req/wfs"
     features_per_request = 1000
-    total_features = get_total_features(AUTH_KEY=AUTH_KEY,
-                                        y_min=y_min,
-                                        x_min=x_min,
-                                        y_max=y_max,
-                                        x_max=x_max)
+    total_features = get_total_features(AUTH_KEY=AUTH_KEY, y_min=y_min, x_min=x_min, y_max=y_max, x_max=x_max)
     payload_template = {
         "SERVICE": "WFS",
         "REQUEST": "GetFeature",
@@ -88,16 +74,21 @@ def get_rice_info(AUTH_KEY: str,
         "KEY": AUTH_KEY
     }
 
-    with ThreadPoolExecutor() as executor:
-        future_to_index = {executor.submit(fetch_data, url, {**payload_template, "STARTINDEX": i}): i for i in range(start_index, total_features, features_per_request)}
-        for future in as_completed(future_to_index):
-            start = future_to_index[future]
-            try:
-                data, filtered_features = future.result()
-                save_filtered_data(data, filtered_features, start, json_dir)
-            except Exception as exc:
-                print(f"Failed to fetch data for start index {start}: {str(exc)}")
+    def fetch_and_save(start):
+        payload = {**payload_template, "STARTINDEX": start}
+        try:
+            data, filtered_features = fetch_data(url, payload)
+            save_filtered_data(data, filtered_features, start, json_dir)
+            del data, filtered_features
+            gc.collect()
+        except Exception as exc:
+            print(f"Failed to fetch data for start index {start}: {str(exc)}")
 
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = [executor.submit(fetch_and_save, i) for i in range(start_index, total_features, features_per_request)]
+        for future in as_completed(futures):
+            future.result()
+            
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-k", "--auth_key", type=str, required=True, help="Issued V-World Authentication Key")
