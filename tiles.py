@@ -33,10 +33,12 @@ def write_band(band, reference_path, output_path):
     out_dataset = None
 
 def hist_stretching(band, lower_percentile=2, upper_percentile=98, gamma=1.0):
-    p_lower, p_upper = np.percentile(band, (lower_percentile, upper_percentile))
-    band_stretched = np.clip((band - p_lower) * 255.0 / (p_upper - p_lower), 0, 255)
-    band_stretched = band_stretched.astype(np.uint8)
-    band_stretched = np.power(band_stretched / 255.0, gamma) * 255
+    non_black_mask = band > 0
+    non_black_band = band[non_black_mask]
+    p_lower, p_upper = np.percentile(non_black_band, (lower_percentile, upper_percentile))
+    band_stretched = np.zeros_like(band, dtype=np.float32)
+    band_stretched[non_black_mask] = np.clip((band[non_black_mask] - p_lower) * 255.0 / (p_upper - p_lower), 0, 255)
+    band_stretched[non_black_mask] = np.power(band_stretched[non_black_mask] / 255.0, gamma) * 255
     return band_stretched.astype(np.uint8)
 
 def crop_black_borders(image_path, cropped_image_path):
