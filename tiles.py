@@ -101,9 +101,9 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir, gamma=1.0, agricultur
         band_2_hs = hist_stretching(band_2, gamma=gamma)
         band_3_hs = hist_stretching(band_3, gamma=gamma)
 
-        new_band_1_path = os.path.join(os.path.dirname(band_1_path), os.path.basename(band_1_path).replace('.jp2', '_new_swir.tif'))
-        new_band_2_path = os.path.join(os.path.dirname(band_2_path), os.path.basename(band_2_path).replace('.jp2', '_new_nir.tif'))
-        new_band_3_path = os.path.join(os.path.dirname(band_3_path), os.path.basename(band_3_path).replace('.jp2', '_new_blue.tif'))
+        new_band_1_path = os.path.join(os.path.dirname(band_1_path), os.path.basename(band_1_path).replace('.jp2', '_band_1.tif'))
+        new_band_2_path = os.path.join(os.path.dirname(band_2_path), os.path.basename(band_2_path).replace('.jp2', '_band_2.tif'))
+        new_band_3_path = os.path.join(os.path.dirname(band_3_path), os.path.basename(band_3_path).replace('.jp2', '_band_3.tif'))
 
         write_band(band_1_hs, band_1_path, new_band_1_path)
         write_band(band_2_hs, band_2_path, new_band_2_path)
