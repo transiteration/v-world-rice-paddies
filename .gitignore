@@ -2,3 +2,4 @@ __pycache__/
 data/
 sentinel_folder
 dataset_folder.py
+bot.py
