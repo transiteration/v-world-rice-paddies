@@ -117,7 +117,7 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--safe_name", type=str, required=True, help="Name of your SAFE folder with saved tiles.")
-    parser.add_argument("-t", "--token", type=str, default="7093347543:AAGiTl6II8eWcgB3YuVQWy5Z9PK9ba-1nGE", help="Your telegram bot Token.")
+    parser.add_argument("-t", "--token", type=str, required=True, help="Your telegram bot Token.")
     args = parser.parse_args()
 
     TOKEN = args.token
