@@ -3,7 +3,10 @@ import json
 import shutil
 import argparse
 import rasterio
-from rasterio.plot import show
+from rasterio.plot import plotting_extent
+from rasterio.transform import from_bounds
+from rasterio.enums import Resampling
+import numpy as np
 from PIL import Image, ImageDraw
 
 def extract_number(filename):
@@ -18,13 +21,13 @@ def get_polygons_list(json_dir):
                 polygons_list.extend([feature["geometry"]["coordinates"][0][0] for feature in data["features"]])
     return polygons_list 
 
-def draw_polygons(tiles_dir: str, masks_dir: str, miscs_dir, json_dir: str) -> None:
+def draw_polygons(tiles_dir: str, masks_dir: str, miscs_dir: str, json_dir: str) -> None:
     polygons_list = get_polygons_list(json_dir=json_dir)
     sorted_tiles = sorted(
         [file for file in os.listdir(tiles_dir) if file.endswith(".tif")],
         key=extract_number)
     existing_masks = sorted(
-        [file for file in os.listdir(masks_dir) if file.endswith(".png")],
+        [file for file in os.listdir(masks_dir) if file.endswith(".tif")],
         key=extract_number)
     
     last_processed_index = 0
@@ -33,15 +36,16 @@ def draw_polygons(tiles_dir: str, masks_dir: str, miscs_dir, json_dir: str) -> N
 
     for image_file in sorted_tiles[last_processed_index:]:
         image_path = os.path.join(tiles_dir, image_file)
-        mask_image_path = os.path.join(masks_dir, image_file.split(".")[0] + ".png")
+        mask_image_path = os.path.join(masks_dir, image_file)
         misc_image_path = os.path.join(miscs_dir, image_file)
+        
         with rasterio.open(image_path) as src:
-            image = src.read([1, 2, 3])
-            extent = rasterio.plot.plotting_extent(src)
-            original_resolution = (src.profile["width"], src.profile["height"])
+            extent = plotting_extent(src)
+            original_resolution = (src.width, src.height)
+            transform = src.transform
+            crs = src.crs
 
-        mask_image = Image.new("L", original_resolution, 0)
-        draw = ImageDraw.Draw(mask_image)
+        mask_data = np.zeros((original_resolution[1], original_resolution[0]), dtype=np.uint8)
 
         polygons_drawn = False
         for polygon_coords in polygons_list:
@@ -50,11 +54,31 @@ def draw_polygons(tiles_dir: str, masks_dir: str, miscs_dir, json_dir: str) -> N
                 poly_x = [(x - extent[0]) / (extent[1] - extent[0]) * original_resolution[0] for x in poly_x]
                 poly_y = [(original_resolution[1] - (y - extent[2]) / (extent[3] - extent[2]) * original_resolution[1]) for y in poly_y]
                 polygon_coords_transformed = list(zip(poly_x, poly_y))
-                draw.polygon(polygon_coords_transformed, outline=255, fill=255)
+                
+                # Draw on a temporary image
+                mask_image = Image.new("L", original_resolution, 0)
+                draw = ImageDraw.Draw(mask_image)
+                draw.polygon(polygon_coords_transformed, outline=1, fill=1)
+                mask_array = np.array(mask_image)
+
+                # Update the mask
+                mask_data = np.maximum(mask_data, mask_array)
                 polygons_drawn = True
 
         if polygons_drawn:
-            mask_image.save(mask_image_path)
+            # Save as GeoTIFF with geospatial metadata
+            with rasterio.open(
+                mask_image_path,
+                'w',
+                driver='GTiff',
+                height=original_resolution[1],
+                width=original_resolution[0],
+                count=1,
+                dtype='uint8',
+                crs=crs,
+                transform=transform
+            ) as dst:
+                dst.write(mask_data, 1)
         else:
             shutil.copy2(image_path, misc_image_path)
 

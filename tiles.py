@@ -155,26 +155,27 @@ def process_directories(refs_dir, tiles_dir, sentinel_dir, gamma=1.0, agricultur
         os.makedirs(tile_output_dir, exist_ok=True)
         subprocess.run([
             "gdal_retile.py",
-            "-ps", "512", "512",
+            "-ps", "128", "128",
             "-targetDir", tile_output_dir,
             ref_path
         ], check=True)
 
+        target_shape = (3, 128, 128)
         for filename in os.listdir(tile_output_dir):
-            if filename.endswith(".tif") or filename.endswith(".jpg"):
-                input_tile_path = os.path.join(tile_output_dir, filename)
-                cropped_tile_path = os.path.join(tile_output_dir, "cropped_" + filename)
-
+            if filename.endswith(".tif") or filename.endswith(".tiff"):
+                file_path = os.path.join(tile_output_dir, filename)
                 try:
-                    crop_res = crop_black_borders(input_tile_path, cropped_tile_path)
-                    if crop_res:
-                        os.remove(input_tile_path)
-                        os.rename(cropped_tile_path, input_tile_path)
-                    else:
-                        os.remove(input_tile_path)
-
+                    # Open the GeoTIFF and check dimensions
+                    with rasterio.open(file_path) as dataset:
+                        data = dataset.read()  # Reads the raster bands
+                        if data.shape != target_shape:
+                            print(f"Removing {filename}, shape {data.shape} does not match {target_shape}")
+                            os.remove(file_path)
+                        else:
+                            print(f"Keeping {filename}, shape matches {target_shape}")
                 except Exception as e:
-                    print(f"Error processing {filename}: {e}")
+                    print(f"Error reading {filename}: {e}")
+                    continue
 
         tiles = glob.glob(os.path.join(tile_output_dir, "*.tif"))
         tiles.sort()
