@@ -1,7 +1,8 @@
-import os 
+import os
 import json
 import argparse
 from to_get_rice import get_rice_info
+
 
 def load_json(filepath):
     try:
@@ -13,6 +14,7 @@ def load_json(filepath):
     except json.JSONDecodeError:
         print(f"Error: Failed to decode JSON from the file {filepath}.")
         return None
+
 
 def get_last_json_file_number(directory):
     try:
@@ -26,6 +28,7 @@ def get_last_json_file_number(directory):
         print(f"Error: Failed to process files in directory {directory} - {e}")
         return -1
 
+
 def get_responses_from_safe(responses_dir, json_path, AUTH_KEY):
     metadata = load_json(json_path)
     if metadata and "bbox" in metadata:
@@ -37,32 +40,53 @@ def get_responses_from_safe(responses_dir, json_path, AUTH_KEY):
         last_json_file_number = get_last_json_file_number(responses_dir)
         print(last_json_file_number)
         if last_json_file_number == -1:
-            get_rice_info(AUTH_KEY,
-                        y_min=y_min,
-                        x_min=x_min,
-                        y_max=y_max,
-                        x_max=x_max,
-                        json_dir=responses_dir,
-                        start_index=0)
+            get_rice_info(
+                AUTH_KEY,
+                y_min=y_min,
+                x_min=x_min,
+                y_max=y_max,
+                x_max=x_max,
+                json_dir=responses_dir,
+                start_index=0,
+            )
         else:
-            get_rice_info(AUTH_KEY,
-                        y_min=y_min,
-                        x_min=x_min,
-                        y_max=y_max,
-                        x_max=x_max,
-                        json_dir=responses_dir,
-                        start_index=last_json_file_number * 1000)
+            get_rice_info(
+                AUTH_KEY,
+                y_min=y_min,
+                x_min=x_min,
+                y_max=y_max,
+                x_max=x_max,
+                json_dir=responses_dir,
+                start_index=last_json_file_number * 1000,
+            )
     else:
-        print("Error: Metadata is missing or does not contain bounding box information.")
+        print(
+            "Error: Metadata is missing or does not contain bounding box information."
+        )
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--safe_name", type=str, required=True, help="Name of your SAFE folder with saved tiles and responses.")
-    parser.add_argument("-k", "--auth_key", type=str, required=True, help="Issued V-World Authentication Key")
+    parser.add_argument(
+        "-s",
+        "--safe_name",
+        type=str,
+        required=True,
+        help="Name of your SAFE folder with saved tiles and responses.",
+    )
+    parser.add_argument(
+        "-k",
+        "--auth_key",
+        type=str,
+        required=True,
+        help="Issued V-World Authentication Key",
+    )
     args = parser.parse_args()
 
     responses_dir = os.path.join("./data/responses", args.safe_name)
     json_path = os.path.join("./data/refs", args.safe_name + ".json")
     os.makedirs(responses_dir, exist_ok=True)
 
-    get_responses_from_safe(responses_dir=responses_dir, json_path=json_path, AUTH_KEY=args.auth_key)
+    get_responses_from_safe(
+        responses_dir=responses_dir, json_path=json_path, AUTH_KEY=args.auth_key
+    )
