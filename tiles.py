@@ -192,9 +192,8 @@ def process_directories(
             if filename.endswith(".tif") or filename.endswith(".tiff"):
                 file_path = os.path.join(tile_output_dir, filename)
                 try:
-                    # Open the GeoTIFF and check dimensions
                     with rasterio.open(file_path) as dataset:
-                        data = dataset.read()  # Reads the raster bands
+                        data = dataset.read()
                         if data.shape != target_shape:
                             print(
                                 f"Removing {filename}, shape {data.shape} does not match {target_shape}"

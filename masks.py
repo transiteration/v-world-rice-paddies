@@ -85,18 +85,15 @@ def draw_polygons(
                 ]
                 polygon_coords_transformed = list(zip(poly_x, poly_y))
 
-                # Draw on a temporary image
                 mask_image = Image.new("L", original_resolution, 0)
                 draw = ImageDraw.Draw(mask_image)
                 draw.polygon(polygon_coords_transformed, outline=1, fill=1)
                 mask_array = np.array(mask_image)
 
-                # Update the mask
                 mask_data = np.maximum(mask_data, mask_array)
                 polygons_drawn = True
 
         if polygons_drawn:
-            # Save as GeoTIFF with geospatial metadata
             with rasterio.open(
                 mask_image_path,
                 "w",

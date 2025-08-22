@@ -21,7 +21,7 @@ def get_last_json_file_number(directory):
         files = os.listdir(directory)
         json_files = [file for file in files if file.endswith(".json")]
         if not json_files:
-            return -1  # Return -1 if no JSON files are found
+            return -1
         numbers = [int(file.split("_")[1].split(".")[0]) for file in json_files]
         return max(numbers)
     except Exception as e:
